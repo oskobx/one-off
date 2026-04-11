@@ -22,6 +22,9 @@ def game(artist: str):
     lyrics = get_lyrics(picked["url"])
     two_lines = pick_two_lines(lyrics)
     
+    if two_lines is None:
+        return {"error": "Could not fetch lyrics, try again"}
+    
     line_to_change = random.randint(0, 1)
     two_lines_original = two_lines.copy()
     fake_line = change_one_word(two_lines[line_to_change])
