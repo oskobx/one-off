@@ -93,7 +93,7 @@ if __name__ == "__main__":
     songs = get_songs(artist)
     picked = pick_weighted_song(songs)
     print(f"\nPicked: {picked['title']} by {picked['artist']} — {picked['views']} views")
-    lyrics = get_lyrics(picked["url"])
+    lyrics = get_lyrics(picked["artist"], picked["title"])
     two_lines = pick_two_lines(lyrics)
 
     line_to_change = random.randint(0, 1)
