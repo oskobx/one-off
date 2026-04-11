@@ -146,6 +146,12 @@
 
             const res = await fetch(`/game?artist=${artist}`);
             const data = await res.json();
+            
+            if (data.error) {
+                document.getElementById("game").innerHTML = `<p class="loading">${data.error} — try again</p>`;
+                return;
+            }
+            
             window.gameData = data;
 
             document.getElementById("game").innerHTML = `
