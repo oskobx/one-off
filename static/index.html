@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>One Off</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+    
+        body {
+            background: #f5f7ff;
+            color: #1a1a1a;
+            font-family: 'Georgia', serif;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    
+        .container {
+            max-width: 600px;
+            width: 90%;
+            padding: 2rem;
+        }
+    
+        h1 {
+            font-size: 2.5rem;
+            font-weight: normal;
+            letter-spacing: 0.2em;
+            margin-bottom: 2rem;
+            color: #2c3e8c;
+        }
+    
+        .search {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 3rem;
+        }
+    
+        input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            border-bottom: 1px solid #a0aee8;
+            color: #1a1a1a;
+            font-size: 1rem;
+            font-family: 'Georgia', serif;
+            padding: 0.5rem 0;
+            outline: none;
+        }
+    
+        input::placeholder { color: #8892c8; }
+    
+        button {
+            background: transparent;
+            border: 1px solid #a0aee8;
+            color: #2c3e8c;
+            padding: 0.5rem 1.2rem;
+            font-family: 'Georgia', serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+    
+        button:hover {
+            border-color: #2c3e8c;
+            color: #2c3e8c;
+            background: #eef0ff;
+        }
+    
+        .song-info {
+            font-size: 0.8rem;
+            color: #8892c8;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 2rem;
+        }
+    
+        .lines {
+            margin-bottom: 2rem;
+        }
+    
+        .line {
+            font-size: 1.1rem;
+            line-height: 2rem;
+            margin-bottom: 0.5rem;
+            color: #333;
+        }
+    
+        .word {
+            cursor: pointer;
+            padding: 2px 4px;
+            border-radius: 3px;
+            transition: all 0.15s;
+            display: inline-block;
+        }
+    
+        .word:hover {
+            background: #eef0ff;
+            color: #2c3e8c;
+        }
+    
+        .result {
+            margin-top: 2rem;
+            font-size: 0.95rem;
+            line-height: 1.8;
+        }
+    
+        .correct { color: #4caf50; }
+        .wrong { color: #ef5350; }
+    
+        .original {
+            color: #8892c8;
+            font-size: 0.85rem;
+            margin-top: 0.5rem;
+            font-style: italic;
+        }
+    
+        .play-again {
+            margin-top: 1.5rem;
+            display: block;
+        }
+    
+        .loading {
+            color: #8892c8;
+            font-style: italic;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>ONE OFF</h1>
+
+        <div class="search">
+            <input id="artist" placeholder="artist" value="Sentino">
+            <button onclick="startGame()">play</button>
+        </div>
+
+        <div id="game"></div>
+    </div>
+
+    <script>
+        async function startGame() {
+            const artist = document.getElementById("artist").value;
+            document.getElementById("game").innerHTML = `<p class="loading">finding a track...</p>`;
+
+            const res = await fetch(`/game?artist=${artist}`);
+            const data = await res.json();
+            window.gameData = data;
+
+            document.getElementById("game").innerHTML = `
+                <div class="song-info">${data.song} — ${data.artist}</div>
+                <div class="lines">
+                    <div class="line">${makeClickable(data.line1)}</div>
+                    <div class="line">${makeClickable(data.line2)}</div>
+                </div>
+                <div class="result" id="result"></div>
+            `;
+        }
+
+        function makeClickable(line) {
+            return line.split(" ").map(word =>
+                `<span class="word" onclick="guess('${word}')">${word}</span>`
+            ).join(" ");
+        }
+
+        function guess(word) {
+            const clean = word.replace(/[.,!?"']/g, "").toLowerCase();
+            const changed = window.gameData.changed_word.replace(/[.,!?"']/g, "").toLowerCase();
+            const correct = clean === changed;
+
+            document.getElementById("result").innerHTML = `
+                <div class="${correct ? 'correct' : 'wrong'}">
+                    ${correct ? '✓ correct' : '✗ wrong — the fake word was: ' + window.gameData.changed_word}
+                </div>
+                <div class="original">original: ${window.gameData.original_line}</div>
+                <button class="play-again" onclick="startGame()">play again</button>
+            `;
+        }
+    </script>
+</body>
+</html>
