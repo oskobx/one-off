@@ -39,27 +39,31 @@ def pick_weighted_song(songs):
     weights = [s["views"] for s in songs]
     return random.choices(songs, weights=weights, k=1)[0]
 
-def get_lyrics(artist_name, song_title):
-    song = genius_client.search_song(song_title, artist_name)
-    if song is None:
-        return []
-    lines = song.lyrics.split("\n")
-    clean = []
-    for line in lines:
-        line = line.strip()
-        if not line:
-            continue
-        if line.startswith("["):
-            continue
-        if "Contributors" in line:
-            continue
-        if line.endswith("Lyrics"):
-            continue
-        if line == "Read More":
-            continue
-        clean.append(line)
-    return clean
-
+def get_lyrics(song_url):
+    SCRAPER_KEY = os.getenv("SCRAPER_KEY")
+    proxy_url = f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={song_url}"
+    headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
+    response = requests.get(proxy_url, headers=headers)
+    soup = BeautifulSoup(response.text, "html.parser")
+    containers = soup.find_all("div", attrs={"data-lyrics-container": "true"})
+    lyrics = []
+    for container in containers:
+        for line in container.get_text(separator="\n").split("\n"):
+            line = line.strip()
+            if not line:
+                continue
+            if line.startswith("["):
+                continue
+            if "Contributors" in line:
+                continue
+            if line.endswith("Lyrics"):
+                continue
+            if line == "Read More":
+                continue
+            if line == "]":
+                continue
+            lyrics.append(line)
+    return lyrics
 def pick_two_lines(lyrics):
     if len(lyrics) < 2:
         return None
@@ -93,7 +97,7 @@ if __name__ == "__main__":
     songs = get_songs(artist)
     picked = pick_weighted_song(songs)
     print(f"\nPicked: {picked['title']} by {picked['artist']} — {picked['views']} views")
-    lyrics = get_lyrics(picked["artist"], picked["title"])
+    lyrics = get_lyrics(picked["url"])
     two_lines = pick_two_lines(lyrics)
 
     line_to_change = random.randint(0, 1)

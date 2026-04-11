@@ -18,7 +18,7 @@ def index():
 def game(artist: str):
     songs = get_songs(artist)
     picked = pick_weighted_song(songs)
-    lyrics = get_lyrics(picked["artist"], picked["title"])
+    lyrics = get_lyrics(picked["url"])
     two_lines = pick_two_lines(lyrics)
     
     if two_lines is None:
