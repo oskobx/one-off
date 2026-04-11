@@ -5,7 +5,6 @@ import random
 import os
 from dotenv import load_dotenv
 from genius import search_artist, get_songs, pick_weighted_song, get_lyrics, pick_two_lines, change_one_word
-
 load_dotenv()
 
 app = FastAPI()
@@ -19,7 +18,7 @@ def index():
 def game(artist: str):
     songs = get_songs(artist)
     picked = pick_weighted_song(songs)
-    lyrics = get_lyrics(picked["url"])
+    lyrics = get_lyrics(picked["artist"], picked["title"])
     two_lines = pick_two_lines(lyrics)
     
     if two_lines is None:
