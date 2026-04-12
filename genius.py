@@ -35,6 +35,7 @@ def get_songs(artist_name):
         })
     return songs
 
+
 def pick_weighted_song(songs):
     weights = [s["views"] for s in songs]
     return random.choices(songs, weights=weights, k=1)[0]
@@ -64,6 +65,7 @@ def get_lyrics(song_url):
                 continue
             lyrics.append(line)
     return lyrics
+    
 def pick_two_lines(lyrics):
     if len(lyrics) < 2:
         return None

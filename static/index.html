@@ -24,7 +24,7 @@
         }
     
         h1 {
-            font-size: 2.5rem;
+            font-size: 1.8rem;
             font-weight: normal;
             letter-spacing: 0.2em;
             margin-bottom: 2rem;
@@ -70,7 +70,7 @@
     
         .song-info {
             font-size: 0.8rem;
-            color: #8892c8;
+            color: #555;
             letter-spacing: 0.1em;
             text-transform: uppercase;
             margin-bottom: 2rem;
@@ -125,14 +125,33 @@
             color: #8892c8;
             font-style: italic;
         }
+
+        .loading::after {
+            content: '';
+            animation: dots 2s steps(3, end) infinite;
+        }
+
+        @keyframes dots {
+            0%   { content: ''; }
+            33%  { content: '.'; }
+            66%  { content: '..'; }
+            100% { content: '...'; }
+        }
+
+        .instruction {
+            font-size: 0.8rem;
+            color: #8892c8;
+            margin-bottom: 1.5rem;
+            letter-spacing: 0.05em;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>ONE OFF</h1>
+        <h1>One Off Lyrics Game</h1>
 
         <div class="search">
-            <input id="artist" placeholder="artist" value="Sentino">
+            <input id="artist" placeholder="Your favorite artist here">
             <button onclick="startGame()">play</button>
         </div>
 
@@ -142,7 +161,7 @@
     <script>
         async function startGame() {
             const artist = document.getElementById("artist").value;
-            document.getElementById("game").innerHTML = `<p class="loading">finding a track...</p>`;
+            document.getElementById("game").innerHTML = `<p class="loading">finding a track</p>`;
 
             const res = await fetch(`/game?artist=${artist}`);
             const data = await res.json();
@@ -155,7 +174,9 @@
             window.gameData = data;
 
             document.getElementById("game").innerHTML = `
+                <p class="instruction">Tap the word that doesn't fit.</p>
                 <div class="song-info">${data.song} — ${data.artist}</div>
+                
                 <div class="lines">
                     <div class="line">${makeClickable(data.line1)}</div>
                     <div class="line">${makeClickable(data.line2)}</div>
