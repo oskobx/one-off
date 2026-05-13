@@ -160,7 +160,14 @@
 
     <script>
         async function startGame() {
-            const artist = document.getElementById("artist").value;
+
+            const artist = document.getElementById("artist").value.trim();
+    
+            if (!artist) {
+                document.getElementById("game").innerHTML = `<p style="color: #8892c8; font-style: italic;">Please enter an artist name first.</p>`;
+                return;
+            }
+            
             document.getElementById("game").innerHTML = `<p class="loading">finding a track</p>`;
 
             const res = await fetch(`/game?artist=${artist}`);
