@@ -42,7 +42,7 @@ def pick_weighted_song(songs):
 
 def get_lyrics(song_url):
     SCRAPER_KEY = os.getenv("SCRAPER_KEY")
-    proxy_url = f"http://api.scraperapi.com?api_key={SCRAPER_KEY}&url={song_url}"
+    proxy_url = f"https://api.scraperapi.com?api_key={SCRAPER_KEY}&url={song_url}"
     headers = {"User-Agent": "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36"}
     response = requests.get(proxy_url, headers=headers)
     soup = BeautifulSoup(response.text, "html.parser")
