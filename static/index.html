@@ -3,132 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>One Off</title>
+    <title>One Off — Lyrics Game</title>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Inter:wght@400;500&display=swap" rel="stylesheet">
     <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-    
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
         body {
             background: #f5f7ff;
-            color: #1a1a1a;
-            font-family: 'Georgia', serif;
+            color: #1a1a2e;
+            font-family: 'Inter', sans-serif;
             min-height: 100vh;
             display: flex;
             justify-content: center;
-            align-items: center;
+            align-items: flex-start;
+            padding: 4rem 1.5rem;
         }
-    
+
         .container {
-            max-width: 600px;
-            width: 90%;
-            padding: 2rem;
+            width: 100%;
+            max-width: 580px;
         }
-    
-        h1 {
-            font-size: 1.8rem;
-            font-weight: normal;
+
+        /* Header */
+        .header {
+            margin-bottom: 2.5rem;
+        }
+
+        .eyebrow {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
             letter-spacing: 0.2em;
-            margin-bottom: 2rem;
-            color: #2c3e8c;
+            text-transform: uppercase;
+            color: #8892c8;
+            margin-bottom: 0.5rem;
         }
-    
+
+        h1 {
+            font-family: 'Space Mono', monospace;
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #2c3e8c;
+            line-height: 1;
+            margin-bottom: 0.4rem;
+        }
+
+        .tagline {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: #8892c8;
+            letter-spacing: 0.05em;
+        }
+
+        /* Divider */
+        .divider {
+            border: none;
+            border-top: 1px dashed #c5cae8;
+            margin: 1.5rem 0;
+        }
+
+        /* Search */
         .search {
             display: flex;
-            gap: 0.5rem;
-            margin-bottom: 3rem;
+            gap: 0;
+            margin-bottom: 0.75rem;
+            border: 1.5px solid #c5cae8;
+            border-radius: 4px;
+            overflow: hidden;
+            transition: border-color 0.2s;
         }
-    
-        input {
-            flex: 1;
-            background: transparent;
-            border: none;
-            border-bottom: 1px solid #a0aee8;
-            color: #1a1a1a;
-            font-size: 1rem;
-            font-family: 'Georgia', serif;
-            padding: 0.5rem 0;
-            outline: none;
-        }
-    
-        input::placeholder { color: #8892c8; }
-    
-        button {
-            background: transparent;
-            border: 1px solid #a0aee8;
-            color: #2c3e8c;
-            padding: 0.5rem 1.2rem;
-            font-family: 'Georgia', serif;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-    
-        button:hover {
+
+        .search:focus-within {
             border-color: #2c3e8c;
-            color: #2c3e8c;
-            background: #eef0ff;
         }
-    
-        .song-info {
-            font-size: 0.8rem;
-            color: #555;
+
+        #artist {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: #fff;
+            padding: 0.7rem 1rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 13px;
+            color: #1a1a2e;
+            min-width: 0;
+        }
+
+        #artist::placeholder { color: #a0aee8; }
+
+        #play-btn {
+            background: #2c3e8c;
+            border: none;
+            color: #fff;
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
+            font-weight: 700;
             letter-spacing: 0.1em;
             text-transform: uppercase;
-            margin-bottom: 2rem;
-        }
-    
-        .lines {
-            margin-bottom: 2rem;
-        }
-    
-        .line {
-            font-size: 1.1rem;
-            line-height: 2rem;
-            margin-bottom: 0.5rem;
-            color: #333;
-        }
-    
-        .word {
+            padding: 0 1.25rem;
             cursor: pointer;
-            padding: 2px 4px;
-            border-radius: 3px;
-            transition: all 0.15s;
-            display: inline-block;
+            transition: background 0.15s;
+            white-space: nowrap;
         }
-    
-        .word:hover {
-            background: #eef0ff;
-            color: #2c3e8c;
-        }
-    
-        .result {
-            margin-top: 2rem;
-            font-size: 0.95rem;
-            line-height: 1.8;
-        }
-    
-        .correct { color: #4caf50; }
-        .wrong { color: #ef5350; }
-    
-        .original {
-            color: #8892c8;
-            font-size: 0.85rem;
-            margin-top: 0.5rem;
-            font-style: italic;
-        }
-    
-        .play-again {
-            margin-top: 1.5rem;
-            display: block;
-        }
-    
+
+        #play-btn:hover { background: #3a50b0; }
+        #play-btn:active { background: #1e2d6b; }
+
+        /* Game area */
+        #game { min-height: 120px; }
+
+        /* Loading */
         .loading {
+            font-family: 'Space Mono', monospace;
+            font-size: 12px;
             color: #8892c8;
-            font-style: italic;
+            letter-spacing: 0.08em;
         }
 
         .loading::after {
             content: '';
-            animation: dots 2s steps(3, end) infinite;
+            animation: dots 1.4s steps(3, end) infinite;
         }
 
         @keyframes dots {
@@ -138,77 +132,228 @@
             100% { content: '...'; }
         }
 
-        .instruction {
-            font-size: 0.8rem;
+        /* Song info */
+        .song-info {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
             color: #8892c8;
+            margin-bottom: 0.5rem;
+        }
+
+        .song-name { color: #2c3e8c; }
+
+        /* Instruction */
+        .instruction {
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+            color: #a0aee8;
+            margin-bottom: 1.25rem;
+        }
+
+        /* Lines */
+        .lines {
             margin-bottom: 1.5rem;
+        }
+
+        .line {
+            padding: 0.9rem 1rem;
+            background: #fff;
+            border: 1px solid #dde0f5;
+            font-size: 1rem;
+            line-height: 1.65;
+            position: relative;
+        }
+
+        .line:first-child {
+            border-radius: 4px 4px 0 0;
+            border-bottom: 1px dashed #dde0f5;
+        }
+
+        .line:last-child {
+            border-radius: 0 0 4px 4px;
+        }
+
+        .line-num {
+            font-family: 'Space Mono', monospace;
+            font-size: 9px;
+            color: #c5cae8;
+            margin-right: 0.6rem;
+            user-select: none;
             letter-spacing: 0.05em;
+        }
+
+        .word {
+            cursor: pointer;
+            padding: 1px 3px;
+            border-radius: 2px;
+            transition: background 0.12s, color 0.12s;
+            display: inline-block;
+        }
+
+        .word:hover {
+            background: #eef0ff;
+            color: #2c3e8c;
+        }
+
+        /* Result */
+        .result-box {
+            padding: 1rem 1.1rem;
+            border-radius: 4px;
+            border: 1px solid #dde0f5;
+            background: #fff;
+            margin-bottom: 1rem;
+        }
+
+        .result-box.correct { border-color: #4caf50; background: #f6fff6; }
+        .result-box.wrong   { border-color: #ef5350; background: #fff6f6; }
+
+        .result-label {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 0.4rem;
+        }
+
+        .result-box.correct .result-label { color: #4caf50; }
+        .result-box.wrong   .result-label { color: #ef5350; }
+
+        .result-fake {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: #8892c8;
+            margin-bottom: 0.4rem;
+        }
+
+        .result-fake span { color: #ef5350; }
+
+        .result-original {
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            color: #8892c8;
+            font-style: italic;
+            line-height: 1.6;
+        }
+
+        .result-original span { color: #1a1a2e; font-style: normal; }
+
+        /* Play again */
+        .play-again {
+            display: inline-block;
+            margin-top: 0.85rem;
+            background: transparent;
+            border: 1.5px solid #c5cae8;
+            color: #2c3e8c;
+            font-family: 'Space Mono', monospace;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            border-radius: 3px;
+            transition: border-color 0.15s, background 0.15s;
+        }
+
+        .play-again:hover {
+            border-color: #2c3e8c;
+            background: #eef0ff;
+        }
+
+        /* Footer */
+        .footer {
+            margin-top: 3rem;
+            font-family: 'Space Mono', monospace;
+            font-size: 10px;
+            color: #c5cae8;
+            letter-spacing: 0.08em;
+            display: flex;
+            justify-content: space-between;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>One Off Lyrics Game</h1>
+        <div class="header">
+            <p class="eyebrow">// lyrics game</p>
+            <h1>ONE OFF</h1>
+            <p class="tagline">one word has been changed — find it</p>
+        </div>
+
+        <hr class="divider">
 
         <div class="search">
-            <input id="artist" placeholder="Your favorite artist here">
-            <button onclick="startGame()">play</button>
+            <input id="artist" type="text" placeholder="your favorite artist..." autocomplete="off" spellcheck="false">
+            <button id="play-btn" onclick="startGame()">PLAY →</button>
         </div>
 
         <div id="game"></div>
+
+        <div class="footer">
+            <span>one-off v1.0</span>
+            <span>groq + genius</span>
+        </div>
     </div>
 
     <script>
+        document.getElementById('artist').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') startGame();
+        });
+
         async function startGame() {
+            const artist = document.getElementById('artist').value.trim();
 
-            const artist = document.getElementById("artist").value.trim();
-    
             if (!artist) {
-                document.getElementById("game").innerHTML = `<p style="color: #8892c8; font-style: italic;">Please enter an artist name first.</p>`;
+                document.getElementById('game').innerHTML = `<p style="font-family:'Space Mono',monospace;font-size:11px;color:#ef5350;letter-spacing:0.05em;">// please enter an artist name first</p>`;
                 return;
             }
-            
-            document.getElementById("game").innerHTML = `<p class="loading">finding a track</p>`;
 
-            const res = await fetch(`/game?artist=${artist}`);
+            document.getElementById('game').innerHTML = `<p class="loading">// finding a track</p>`;
+
+            const res = await fetch(`/game?artist=${encodeURIComponent(artist)}`);
             const data = await res.json();
-            
+
             if (data.error) {
-                document.getElementById("game").innerHTML = `<p class="loading">${data.error} — try again</p>`;
+                document.getElementById('game').innerHTML = `<p style="font-family:'Space Mono',monospace;font-size:11px;color:#ef5350;letter-spacing:0.05em;">// ${data.error}</p>`;
                 return;
             }
-            
+
             window.gameData = data;
 
-            document.getElementById("game").innerHTML = `
-                <p class="instruction">Tap the word that doesn't fit.</p>
-                <div class="song-info">${data.song} — ${data.artist}</div>
-                
+            document.getElementById('game').innerHTML = `
+                <div class="song-info"><span class="song-name">${data.song}</span> — ${data.artist}</div>
+                <p class="instruction">// tap the word that doesn't fit</p>
                 <div class="lines">
-                    <div class="line">${makeClickable(data.line1)}</div>
-                    <div class="line">${makeClickable(data.line2)}</div>
+                    <div class="line"><span class="line-num">01</span>${makeClickable(data.line1)}</div>
+                    <div class="line"><span class="line-num">02</span>${makeClickable(data.line2)}</div>
                 </div>
-                <div class="result" id="result"></div>
+                <div id="result-area"></div>
             `;
         }
 
         function makeClickable(line) {
-            return line.split(" ").map(word =>
-                `<span class="word" onclick="guess('${word}')">${word}</span>`
-            ).join(" ");
+            return line.split(' ').map(word =>
+                `<span class="word" onclick="guess('${word.replace(/'/g, "\\'")}')">${word}</span>`
+            ).join(' ');
         }
 
         function guess(word) {
-            const clean = word.replace(/[.,!?"']/g, "").toLowerCase();
-            const changed = window.gameData.changed_word.replace(/[.,!?"']/g, "").toLowerCase();
+            const clean = word.replace(/[.,!?"']/g, '').toLowerCase();
+            const changed = window.gameData.changed_word.replace(/[.,!?"']/g, '').toLowerCase();
             const correct = clean === changed;
 
-            document.getElementById("result").innerHTML = `
-                <div class="${correct ? 'correct' : 'wrong'}">
-                    ${correct ? '✓ correct' : '✗ wrong — the fake word was: ' + window.gameData.changed_word}
+            document.getElementById('result-area').innerHTML = `
+                <div class="result-box ${correct ? 'correct' : 'wrong'}">
+                    <div class="result-label">${correct ? '✓ correct' : '✗ wrong'}</div>
+                    ${!correct ? `<div class="result-fake">fake word: <span>${window.gameData.changed_word}</span></div>` : ''}
+                    <div class="result-original">original: <span>${window.gameData.original_line}</span></div>
+                    <button class="play-again" onclick="startGame()">PLAY AGAIN →</button>
                 </div>
-                <div class="original">original: ${window.gameData.original_line}</div>
-                <button class="play-again" onclick="startGame()">play again</button>
             `;
         }
     </script>
