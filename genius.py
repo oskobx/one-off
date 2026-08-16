@@ -75,7 +75,7 @@ def pick_two_lines(lyrics):
 def change_one_word(line):
     client = Groq(api_key=GROQ_KEY)
     response = client.chat.completions.create(
-        model="qwen-qwq-32b",
+        model="openai/gpt-oss-120b",
         messages=[
             {
                 "role": "user",
